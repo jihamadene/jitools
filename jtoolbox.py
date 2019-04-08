@@ -79,9 +79,8 @@ def transfertSkinCluster():
 
 
 ########### controler for each sel  ##########
-def fkThis():
-    jntlist=cmds.ls(sl=1)
-    
+def fkThis(jntlist):
+    neachlist=[]
     for each in jntlist:
         neach='ctrl_'+each
         for prfx in prefixlist:
@@ -100,19 +99,21 @@ def fkThis():
             cmds.parentConstraint(cmds.listRelatives(each,p=1),offgroup,mo=1)
         except Exception:
             pass
+        neachlist.append(neach)
+    return(neachlist)
         #if cmds.objectType('ikHandle1')==
-def offsetgrp():
-    selection=cmds.ls(sl=1)
+def offsetgrp(selection=cmds.ls(sl=1)):
     for each in selection:
         cmds.select(cl=1)
         eachparent=cmds.listRelatives(each,p=1)
-        offgrp=cmds.group(em=1, n=each+'_offset2')
+        offgrp=cmds.group(em=1, n=each+'_offset')
         cmds.parent(offgrp,each,r=1)
-        cmds.parent(offgrp,eachparent,a=1)
+        if eachparent==None:cmds.parent(offgrp,w=1,a=1)
+        else:cmds.parent(offgrp,eachparent,a=1)
         cmds.parent(each,offgrp,a=1)
+        return(offgrp)
 ####offset
-def offset():
-    selection = pm.selected()
+def offset(selection = pm.selected()):
     for selectedItem in selection:
         offgroup= pm.group(em=True,name=(selectedItem.name()+'_offset'))
         offgroup.setParent(selectedItem, r=True)
@@ -339,6 +340,10 @@ def cb_orients():
         cmds.setAttr(each+'.jointOrientX',cb=1)
         cmds.setAttr(each+'.jointOrientY',cb=1)
         cmds.setAttr(each+'.jointOrientZ',cb=1)
+        try:
+            cmds.setAttr(each+'.lockInfluenceWeights',cb=1)
+        except Exception:pass
+            
 ####tgl_axis()
 def tgl_axis():
     if cmds.getAttr(cmds.ls(sl=1)[0]+'.displayLocalAxis')==1:
@@ -782,6 +787,7 @@ def RigSanityCheck():
     if listOfNotMatchingGeos==[]:
         return('checked')
     else:
+        mc.select(listOfNotMatchingGeos)
         return(listOfNotMatchingGeos)
     
         
@@ -869,13 +875,13 @@ def publishRig():
     import os
     import os.path
     createFolksAttr()
-    # loadLastMesh()
-    # checked=RigSanityCheck()
-    # if checked=='checked':
-    #     print('GEO VALIDATED')
-    # else:
-    #     return(checked)
-    # mc.file(rfn='abcRN',rr=1)
+    loadLastMesh()
+    checked=RigSanityCheck()
+    if checked=='checked':
+        print('GEO VALIDATED')
+    else:
+        return(checked)
+    mc.file(rfn='abcRN',rr=1)
     cleanUp()
     # smoothMesh()
     tweekParams()
@@ -953,7 +959,13 @@ def LegRig():
     for each in cmds.ls(sl=1):
         cmds.listRelatives(ad=1)
         
-        
+def selSkJnt():
+    infList=[]
+    for each in mc.ls(sl=1):
+        infList.extend(mc.skinCluster(inf=each,q=1))
+    mc.select(infList)
+    return(infList)
+
 
 ######################################################################################################
 #####################################         TEST ZONE           ##################################
@@ -991,8 +1003,9 @@ cmds.button( label='hideJnts', parent = "gridLayout", command=('hideJnts()'))
 cmds.button( label='jntForEach', parent = "gridLayout", command=('jntForEach()'))
 cmds.button( label='offset', parent = "gridLayout", command=('offset()'))
 cmds.button( label='tranSkin', parent = "gridLayout", command=('transfertSkinCluster()'))
-cmds.button( label='fkThis', parent = "gridLayout", command=('fkThis()'))
+cmds.button( label='fkThis', parent = "gridLayout", command=('fkThis(cmds.ls(sl=1))'))
 cmds.button( label='selJnts', parent = "gridLayout", command=('selJnts()'))
+cmds.button( label='selSkJnt', parent = "gridLayout", command=('selSkJnt()'))
 cmds.button( label='segmntScale0', parent = "gridLayout", command=('segmntScale0()'))
 cmds.button( label='swichSpace', parent = "gridLayout", command=('swichSpace()'))
 cmds.button( label='upMOffsets', parent = "gridLayout", command=('upMOffsets()'))
@@ -1029,6 +1042,7 @@ cmds.button( label='unlockMesh', parent = "gridLayout", command=('unlockMesh()')
 # cmds.button( label='makeThumbnail', parent = "gridLayout", command=('makeThumbnail()'))
 # cmds.button( label='saveThumbnail', parent = "gridLayout", command=('saveThumbnail()'))
 cmds.button( label='loadLastMesh', parent = "gridLayout", command=('loadLastMesh()'))
+cmds.button( label='RigSanityCheck', parent = "gridLayout", command=('RigSanityCheck()'))
 cmds.button( label='publishRig', parent = "gridLayout", command=('pprint(publishRig())'))
 #cmds.button( label='Close', parent = "gridLayout", command=('cmds.deleteUI(\"' + window + '\", window=True)') )
 
