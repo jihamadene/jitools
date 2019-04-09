@@ -1,4 +1,8 @@
+import time
+import stat
 import maya.cmds as cmds
+import os
+from pprint import *
 import maya.cmds as mc
 import pymel.core as pm
 import maya.mel as mel
@@ -20,7 +24,16 @@ def increment(s):
         s = s[:max(end-len(next), start)] + next + s[end:]
     return s
 
-
+def prntToCste(elemlist=None,parent=None):
+    if elemlist==None:
+        elemlist=mc.ls(sl=1)
+        
+    for each in elemlist:
+        mc.parentConstraint(mc.listRelatives(each,p=1)[0],each,mo=1)
+        if parent==None:
+            mc.parent(each,w=1)
+        else:
+            mc.parent(each,parent)
 
 def GetHistoryByType(_oObj, _sType):
     aHistory = pm.listHistory(_oObj)
@@ -874,15 +887,15 @@ def upMOffsets():
 def publishRig():
     import os
     import os.path
-    createFolksAttr()
-    loadLastMesh()
-    checked=RigSanityCheck()
-    if checked=='checked':
-        print('GEO VALIDATED')
-    else:
-        return(checked)
-    mc.file(rfn='abcRN',rr=1)
-    cleanUp()
+    # createFolksAttr()
+    # loadLastMesh()
+    # checked=RigSanityCheck()
+    # if checked=='checked':
+    #     print('GEO VALIDATED')
+    # else:
+    #     return(checked)
+    # mc.file(rfn='abcRN',rr=1)
+    # cleanUp()
     # smoothMesh()
     tweekParams()
     #screenshot
@@ -927,6 +940,68 @@ def publishRig():
     print('Published render version: {0} \nPublished Proxy Version: {1} \nPlayblast: {2}'.format(rnd, prx, picture))
     # return ('published render version: '+ rnd +'\n published proxy version: '+prx +' and a playblast: '+ picture)
 
+def publishMod():
+    # createFolksAttr()
+    # cleanUp()
+    # smoothMesh()
+    #screenshot
+    dst=(mc.file(sn=1,q=1).replace('Tasks/Modeling/Maya/scenes/','Publish/Renders/Modeling/')).replace('.ma','')
+    picture=mc.playblast(fmt='image',f=dst,st=1001,et=1001,c="png",fo=1)
+    #scenesinfos
+    scenename=mc.file(sn=1,shn=1,q=1)
+    sceneversion=str(scenename.split('_')[3])
+    if not 'leTemple'in dst:
+        sceneversion=sceneversion.strip('v')
+    scenepath=mc.file(sn=1,q=1).replace('Tasks/Modeling/Maya/scenes/'+scenename,'Publish/Modeling/')
+    # if not os.path.isdir(scenepath):
+    #     os.makedirs (scenepath)
+    abcpath=str(scenename.split('_')[0]+'_'+scenename.split('_')[2]+'_'+sceneversion+'.abc')
+    #saving ABC
+    abc=mc.AbcExport(j='-frameRange 1001 1001 -stripNamespaces -uvWrite -worldSpace -writeUVSets -dataFormat ogawa -root'+ scenename.split('_')[0]+'_'+scenename.split('_')[2]+' -file '+scenepath+abcpath)
+
+
+    print('Published abc version: {0}  \nPlayblast: {1}'.format(scenepath+'/'+abcpath, picture))
+    return('Published abc version: {0}  \nPlayblast: {1}'.format(scenepath+'/'+abcpath, picture))
+    
+
+
+
+def listLastrigs():
+    if 'siren' in cmds.file(q=1,sn=1): charspath='/Volumes/Projects/siren/Assets/Character/'
+    if 'leTemple' in cmds.file(q=1,sn=1): charspath='/Volumes/Projects/leTemple/Assets/Character/'
+    listOfChars=os.listdir(charspath)
+    lastVersions=[]
+    for each in listOfChars:
+        try:
+            versions=os.listdir(charspath+each+'/Publish/Rigging/')
+            versions.sort()
+            lastVersion=versions[-1]
+            filePath=charspath+each+'/Publish/Rigging/'+str(lastVersion)+'/render/'+each+'_main.ma'
+            fileStatsObj = os.stat ( filePath )
+            lastVersions.append((filePath,time.ctime( fileStatsObj [ stat.ST_MTIME ] )))
+        except Exception:
+            pass
+    return lastVersions
+
+
+def updateRigs(resolution='render'):
+    listofReferences=cmds.ls(et='reference')
+
+    for each in listofReferences:
+        oldpath=cmds.reference(q=1,rfn=each,f=1)
+        filename=cmds.reference(q=1,rfn=each,f=1,sn=1)
+        try:
+            if 'Rigging/' in oldpath:
+                choppath=oldpath.split('Rigging/')
+                listofversions=os.listdir(choppath[0]+'Rigging/')
+                listofversions.sort()
+                lastVersion=listofversions[-1]   
+                newfolderpath=choppath[0]+'Rigging/'+str(lastVersion)+'/'+resolution+'/'
+                newpath=newfolderpath+'/'+os.listdir(newfolderpath)[0]
+                # if 'leTemple' in cmds.file(q=1,sn=1):newpath=choppath[0]+'Rigging/'+str(lastVersion)+'/'+resolution+'/'+filename
+                if oldpath!=newpath:
+                    cmds.file(newpath, loadReference=each)
+        except Exception:pass
 
 def swichSpace():
     for each in cmds.ls(sl=1):
@@ -982,7 +1057,7 @@ def selSkJnt():
 
 #Type in the name and the size of the window
 windowName = "toolbox"
-windowSize = (230, 240)
+windowSize = (230, 280)
 #check to see if this window already exists
 if (cmds.window(windowName , exists=True,tb=1)):
     cmds.deleteUI(windowName)
@@ -1039,7 +1114,11 @@ cmds.button( label='green', parent = "gridLayout", command=('green()'))
 cmds.button( label='reset', parent = "gridLayout", command=('reset()'))
 cmds.button( label='lockMesh', parent = "gridLayout", command=('lockMesh()'))
 cmds.button( label='unlockMesh', parent = "gridLayout", command=('unlockMesh()'))
-# cmds.button( label='makeThumbnail', parent = "gridLayout", command=('makeThumbnail()'))
+cmds.button( label='prntToCste', parent = "gridLayout", command=('prntToCste()'))
+cmds.button( label='listLastrigs', parent = "gridLayout", command=('pprint(listLastrigs()'))       
+cmds.button( label='RigsHig', parent = "gridLayout", command=('updateRigs()'))        
+cmds.button( label='RigsMid', parent = "gridLayout", command=('updateRigs("mid")'))        
+
 # cmds.button( label='saveThumbnail', parent = "gridLayout", command=('saveThumbnail()'))
 cmds.button( label='loadLastMesh', parent = "gridLayout", command=('loadLastMesh()'))
 cmds.button( label='RigSanityCheck', parent = "gridLayout", command=('RigSanityCheck()'))
