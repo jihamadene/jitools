@@ -1,0 +1,95 @@
+//Increments A File Automatically
+/*
+<NAME> jgIncrementalSave.mel </NAME>
+<VERSION> v1.0 </VERSION>
+<AUTHORS> Jay Grenier (jay@jaygrenier.com) </AUTHORS>
+
+<DESCRIPTION>
+
+	Automatically increments your scene file.  Adds a number to the end of the filename if one
+	does not exist already.
+
+	Adds the previous file to your recently opened files list.
+
+</DESCRIPTION>
+
+<TO_USE>
+
+	1. Source Script To Increment.  Adding a shelf button that calls it is the easiest and most convenient way.
+
+<HISTORY>
+
+	v1.0 (Thursday, September 16, 2010)
+		o Release
+
+</HISTORY>
+
+*/
+
+// **********************************************************   
+// Automatically Increments A Saved Maya File
+global proc jgIncrementalSave () {
+
+	// Scene File Name
+	string $sceneFile = `file -q -sn` ;
+	
+	// Get File Extension
+	string $extension = `fileExtension $sceneFile` ;
+	
+	// Remove Extension
+	string $fileNameNoExt ;
+	if($extension == "mb" || $extension ==  "ma") {
+		
+		// Tokenize Filename
+		string $buffer[] ;
+		tokenize $sceneFile "." $buffer ;
+		
+		// Recompile Scenename Without Extension
+		for($i = 0; $i < (size($buffer)-1); $i++) {
+			$fileNameNoExt = $fileNameNoExt + $buffer[$i] ;
+		}
+	
+	} else {
+		
+		// Error Check
+		error "Current file isn't .mb or .ma, please save before incrementing." ;
+	
+	}
+	
+	// Extract Name And Current Version Using Regex
+	string $nameWithNoVersion = `match ".*[^0-9]" $fileNameNoExt` ;
+	string $currentVersion = `match "[0-9]+$" $fileNameNoExt` ;
+
+	// Check For Integer, Add One If None
+	if($currentVersion == "") $currentVersion = "00" ;
+
+	// Increment Version
+	int $int = $currentVersion ;
+	$int++ ;
+
+	// Pad Digits If Needed
+	int $beforeCount = size($currentVersion) ;
+	string $incVersion = $int ;
+	int $afterCount = size($incVersion) ;
+	if($beforeCount > $afterCount) {
+		while($beforeCount > $afterCount) {
+			$incVersion = ("0"+$incVersion) ;
+			$afterCount = size($incVersion) ;
+		}
+	}
+	
+	// Make New Filename
+	string $newFileName = ($nameWithNoVersion+$incVersion+"."+$extension) ;
+	
+	// Save It
+	file -rename $newFileName ;
+	file -f -save ;
+
+	// Add To Recent File List
+	if($extension == "mb") catch(`addRecentFile $newFileName "mayaBinary"`) ;
+	if($extension == "ma") catch(`addRecentFile $newFileName "mayaAscii"`) ;
+
+	// Finish
+	print ("Saved as "+$newFileName+"\n") ;
+
+} jgIncrementalSave ;

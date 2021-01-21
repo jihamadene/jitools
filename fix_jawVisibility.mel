@@ -1,0 +1,3 @@
+parent ctrls_jaw_facepnt ctrls_faceboard_facial ;
+file -save;
+quit;

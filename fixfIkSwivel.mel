@@ -1,0 +1,5 @@
+//fixfIkSwivel
+renameAttr net_Arm.fSwivelDistance  fIkSwivelDistance;
+renameAttr net_Arm1.fSwivelDistance fIkSwivelDistance;
+file -save;
+quit;

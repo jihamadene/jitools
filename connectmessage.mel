@@ -1,0 +1,17 @@
+// catch (`connectAttr -f ctrl_shoulder_l_ik.parent ctrl_shoulderExtra_l_ik.parent`);
+// setAttr -lock true -keyable false -channelBox false "ctrl_shoulderExtra_l_ik.parent";
+// catch (`connectAttr -f ctrl_shoulder_r_ik.parent ctrl_shoulderExtra_r_ik.parent`);
+// setAttr -lock true -keyable false -channelBox false "ctrl_shoulderExtra_r_ik.parent";
+// catch (`connectAttr -f ctrl_shoulder_l_ik.message rig_shoulder_l_ikfkNetwork_01.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_r_ik.message rig_shoulder_r_ikfkNetwork_01.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_l_ik.message rig_shoulder_l_ikfkNetwork.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_r_ik.message rig_shoulder_r_ikfkNetwork.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_l_ik.message rig_shoulder_l_ikfkNetwork_02.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_r_ik.message rig_shoulder_r_ikfkNetwork_02.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_l_ik.message rig_shoulder_l_ikfkNetwork_03.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_r_ik.message rig_shoulder_r_ikfkNetwork_03.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_l_ik.message rig_shoulder_l_ikfkNetwork_04.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_r_ik.message rig_shoulder_r_ikfkNetwork_04.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_l_ik.message rig_shoulder_l_ikfkNetwork_05.oIkCtrl`);
+// catch (`connectAttr -f ctrl_shoulder_r_ik.message rig_shoulder_r_ikfkNetwork_05.oIkCtrl`);
+catch (`connectAttr -f ctrl_shoulder_l_ik.message net_Arm.oIkCtrl`);

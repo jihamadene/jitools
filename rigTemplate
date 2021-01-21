@@ -1,0 +1,45 @@
+##sets
+
+jSpine=('jnt_spine_00', 'jnt_spine_01', 'jnt_spine_02', 'jnt_spine_03', 'jnt_spine_04', 'jne_spine')
+jNeck=('jnt_neck')
+jCollar=('jnt_collar')
+jHead=('jnt_head')
+jHeadOffset=('jnt_headOffset')
+jClav_l=('jnt_clav_l')
+jClav_r=('jnt_clav_r')
+
+##parts
+pSpine=AutoRig.rigs.Spine.Create(select('jnt_spine_00', 'jnt_spine_01', 'jnt_spine_02', 'jnt_spine_03', 'jnt_spine_04', 'jne_spine'))
+pNeck=AutoRig.rigs.FK.Create(select('jnt_neck'))
+pCollar=AutoRig.rigs.FK.Create(select('jnt_collar'))
+pHead=AutoRig.rigs.FK.Create(select('jnt_head'))
+pHeadOffset=AutoRig.rigs.FK.Create(select('jnt_headOffset'))
+pClav_l=AutoRig.rigs.FK.Create(select('jnt_clav_l'))
+pClav_r=AutoRig.rigs.FK.Create(select('jnt_clav_r'))
+
+##options
+pSpine.params.fCtrlSize = 0.2
+pNeck.params.fCtrlSize = 0.2
+pCollar.params.fCtrlSize = 0.2
+pHead.params.fCtrlSize = 0.2
+pHeadOffset.params.fCtrlSize = 0.2
+pClav_l.params.fCtrlSize = 0.2
+pClav_r.params.fCtrlSize = 0.2
+
+## verrifier 
+pSpine.CanBuild()
+pNeck.CanBuild()
+pCollar.CanBuild()
+pHead.CanBuild()
+pHeadOffset.CanBuild()
+pClav_l.CanBuild()
+pClav_r.CanBuild()
+
+##build
+pSpine.Build()
+pNeck.Build()
+pCollar.Build()
+pHead.Build()
+pHeadOffset.Build()
+pClav_l.Build()
+pClav_r.Build()

@@ -1,0 +1,48 @@
+/// ctrl_slack_l_03_offset
+select -r ppSimon_rig:ctrl_spine_ik_03 ;
+select -add ppSimon_rig:ctrl_slack_l_03_offset ;
+doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+parentConstraint -mo -weight 1;
+setAttr "ppSimon_rig:ctrl_slack_l_03_offset_parentConstraint1.ctrl_slack_l_02W0" .25;
+setAttr "ppSimon_rig:ctrl_slack_l_03_offset_parentConstraint1.ctrl_spine_ik_03W1" .75;
+
+/// ctrl_slack_r_03_offset
+select -r ppSimon_rig:ctrl_spine_ik_03 ;
+select -add ppSimon_rig:ctrl_slack_r_03_offset ;
+doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+parentConstraint -mo -weight 1;
+setAttr "ppSimon_rig:ctrl_slack_r_03_offset_parentConstraint1.ctrl_slack_r_02W0" .25;
+setAttr "ppSimon_rig:ctrl_slack_r_03_offset_parentConstraint1.ctrl_spine_ik_03W1" .75;
+
+/// ctrl_slack_l_04_offset
+select -r ppSimon_rig:ctrl_spine_ik_03 ;
+select -add ppSimon_rig:ctrl_slack_l_04_offset ;
+doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+parentConstraint -mo -weight 1;
+setAttr "ppSimon_rig:ctrl_slack_l_04_offset_parentConstraint1.ctrl_slack_l_03W0" .25;
+setAttr "ppSimon_rig:ctrl_slack_l_04_offset_parentConstraint1.ctrl_spine_ik_03W1" .75;
+
+/// ctrl_slack_r_04_offset
+select -r ppSimon_rig:ctrl_spine_ik_03 ;
+select -add ppSimon_rig:ctrl_slack_r_04_offset ;
+doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+parentConstraint -mo -weight 1;
+setAttr "ppSimon_rig:ctrl_slack_r_04_offset_parentConstraint1.ctrl_slack_r_03W0" .25;
+setAttr "ppSimon_rig:ctrl_slack_r_04_offset_parentConstraint1.ctrl_spine_ik_03W1" .75;
+
+/// ctrl_slack_l_05_offset
+select -r ppSimon_rig:ctrl_spine_ik_02 ;
+select -add ppSimon_rig:ctrl_slack_l_05_offset ;
+doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+parentConstraint -mo -weight 1;
+setAttr "ppSimon_rig:ctrl_slack_l_05_offset_parentConstraint1.ctrl_slack_l_04W0" .25;
+setAttr "ppSimon_rig:ctrl_slack_l_05_offset_parentConstraint1.ctrl_spine_ik_02W1" .75;
+
+/// ctrl_slack_r_05_offset
+select -r ppSimon_rig:ctrl_spine_ik_02 ;
+select -add ppSimon_rig:ctrl_slack_r_05_offset ;
+doCreateParentConstraintArgList 1 { "1","0","0","0","0","0","0","1","","1" };
+parentConstraint -mo -weight 1;
+setAttr "ppSimon_rig:ctrl_slack_r_05_offset_parentConstraint1.ctrl_slack_r_04W0" .25;
+setAttr "ppSimon_rig:ctrl_slack_r_05_offset_parentConstraint1.ctrl_spine_ik_02W1" .75;
+
